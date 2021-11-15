@@ -57,6 +57,11 @@ def keygen():
     n = p * q
     phi = Euler(p, q)
     D, e = GenerateD_e(phi)
+    print("n = " + str(n) + "\n" +
+          "E = " + str(e) + "\n" +
+          "D = " + str(D) + "\n" +
+          "p = " + str(p) + "\n" +
+          "q = " + str(q) + "\n")
     return n, e, D, p, q
 
 def sec_to_dec(num: str):
@@ -100,20 +105,17 @@ if __name__ == '__main__':
         order = int(input(
             "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре), Дешифровать (2 на клавиатуре) или Сгенирировать ключи (3 на клавиатуре): \n"))
         if order == 1:
-            message = str(input())
+            message = str(input('Введите исходное сообщение М: '))
             n, e, D, p, q = keygen()
-            print("n = " + str(n) + "\n" +
-                                "E = " + str(e) + "\n" +
-                                "D = " + str(D) + "\n" +
-                                "p = " + str(p) + "\n" +
-                                "q = " + str(q) + "\n")
-
-            print(Encrypt(message))
+            print('Шифртекст С: ', Encrypt(message))
             
         if order == 2:
-            emessage = str(input())
-            D = int(input())
-            n = int(input())
+            emessage = str(input('Введите шифртекст С: '))
+            D = int(input('Введите закрытый ключ(D, n): D = '))
+            n = int(input('n = '))
             dmessage = Decrypt(emessage)
-            print(dmessage)
+            print('Исходное сообщение М: ', dmessage)
+        if order == 3:
+            keygen()
+            print("Получаю ключи...")
 
