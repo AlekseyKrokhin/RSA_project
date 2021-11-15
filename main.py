@@ -45,10 +45,29 @@ def Euler(num1, num2):
     phi = (num1 - 1)*(num2 - 1)
     return phi
 
-def GeneratingD(phi):
+def GeneratingD_e(phi):
     e_list = [3, 5, 17, 257, 65537]
     e = random.choice(e_list)
     while not CoprimeTest(e, phi):
         e = random.choice(e_list)
     D = pow(e, -1, phi)
-    return D
+    return D, e
+
+def Encrypt(message):
+    emessage = ''
+    for i in message:
+        C = pow(ord(i), e, n)
+        emessage += (chr(C)) +
+    return emessage
+
+
+def Decrypt(emessage):
+    demessage = ''
+    n = p*q
+    for i in emessage:
+        M = pow(ord(i), D, n)
+        demessage += chr(M)
+    return demessage
+
+
+
