@@ -14,6 +14,6 @@ class UnitTest(unittest.TestCase):
     def test_encr(self):
         main.n, main.e, main.D, main.p, main.q = keygen()
         self.assertEqual(Decrypt(Encrypt('Привет')), 'Привет')
-        self.assertEqual(Decrypt(Encrypt('AbCdEfАбВгД')), 'AbCdEfАбВгД')
-        self.assertEqual(Decrypt(Encrypt('!"№%:,.;@#$%^&*∂å∂ƒ√')), '!"№%:,.;@#$%^&*∂å∂ƒ√')
-        self.assertEqual(Decrypt(Encrypt('Фаптш FSF3415__₽')), 'Фаптш FSF3415__₽')
+        self.assertEqual(Decrypt(Encrypt('Russia is great country')), 'Russia is great countr')
+        self.assertEqual(Decrypt(Encrypt('2,71828182845904532..,./%')), '!"№%:,.;@#$%^&*∂å∂ƒ√')
+        self.assertEqual(Decrypt(Encrypt('пи=3,1415==--')), 'Фаптш FSF3415__₽')
