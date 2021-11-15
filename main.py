@@ -1,7 +1,7 @@
 import random
 
 
-def MillerRabin(p, repeat=5):
+def MillerRabin(p, repeat= 5):
     if p == 2:
         return True
     if p % 2 == 0:
@@ -25,10 +25,11 @@ def MillerRabin(p, repeat=5):
     return True
 
 def Generate_prime_number(keysize = 1024):
-    num = random.getrandbits(keysize)
-    while not MillerRabin(num):
+    while True:
         num = random.getrandbits(keysize)
-        return num
+        if MillerRabin(num, repeat = 5):
+            return num
+
 def CoprimeTest(num1, num2):
     while num1 != 0 and num2 != 0:
         if num1 > num2:
@@ -45,9 +46,9 @@ def Euler(num1, num2):
     return phi
 
 def GenerateD_e(phi):
-    e = random.randint(1000, 100000000000)
+    e = random.randint(1000000000, 100000000000)
     while not CoprimeTest(phi, e):
-        e = random.randint(1000, 100000000000)
+        e = random.randint(1000000000, 100000000000)
     D = pow(e, -1, phi)
     return D, e
 
