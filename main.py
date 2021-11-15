@@ -25,11 +25,10 @@ def MillerRabin(p, repeat=5):
     return True
 
 def Generate_prime_number(keysize = 1024):
-    while True:
+    num = random.getrandbits(keysize)
+    while not MillerRabin(num):
         num = random.getrandbits(keysize)
-        if MillerRabin(num):
-            return num
-
+        return num
 def CoprimeTest(num1, num2):
     while num1 != 0 and num2 != 0:
         if num1 > num2:
@@ -45,29 +44,75 @@ def Euler(num1, num2):
     phi = (num1 - 1)*(num2 - 1)
     return phi
 
-def GeneratingD_e(phi):
-    e_list = [3, 5, 17, 257, 65537]
-    e = random.choice(e_list)
-    while not CoprimeTest(e, phi):
-        e = random.choice(e_list)
+def GenerateD_e(phi):
+    e = random.randint(1000, 100000000000)
+    while not CoprimeTest(phi, e):
+        e = random.randint(1000, 100000000000)
     D = pow(e, -1, phi)
     return D, e
 
+def keygen():
+    p, q = Generate_prime_number(), Generate_prime_number()
+    n = p * q
+    phi = Euler(p, q)
+    D, e = GenerateD_e(phi)
+    return n, e, D, p, q
+
+def sec_to_dec(num: str):
+    dec = 0
+    j = 1
+    for i in num:
+        dec += int(i) * pow(2, len(num)-j)
+        j += 1
+    return dec
+
 def Encrypt(message):
-    emessage = ''
+    emessage = ""
     for i in message:
-        C = pow(ord(i), e, n)
-        emessage += (chr(C)) +
+        i = ord(i)
+        i = '{0:016b}'.format(i)
+        emessage += i
+    emessage = "1" + emessage
+    print(emessage)
+    emessage = pow(int(emessage), e, n)
     return emessage
 
 
 def Decrypt(emessage):
-    demessage = ''
-    n = p*q
+    emessage = str(pow(int(emessage), D, n))
+    print(emessage)
+    emessage = emessage[1:]
+    count = 0
+    dmessage = ''
+    num = ''
     for i in emessage:
-        M = pow(ord(i), D, n)
-        demessage += chr(M)
-    return demessage
+        count += 1
+        num += i
+        if count == 16:
+            dmessage += chr((sec_to_dec(num)))
+            count = 0
+            num = ''
+    return dmessage
 
+if __name__ == '__main__':
+    while True:
+        order = int(input(
+            "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре), Дешифровать (2 на клавиатуре) или Сгенирировать ключи (3 на клавиатуре): \n"))
+        if order == 1:
+            message = str(input())
+            n, e, D, p, q = keygen()
+            print("n = " + str(n) + "\n" +
+                                "E = " + str(e) + "\n" +
+                                "D = " + str(D) + "\n" +
+                                "p = " + str(p) + "\n" +
+                                "q = " + str(q) + "\n")
 
+            print(Encrypt(message))
+            
+        if order == 2:
+            emessage = str(input())
+            D = int(input())
+            n = int(input())
+            dmessage = Decrypt(emessage)
+            print(dmessage)
 
