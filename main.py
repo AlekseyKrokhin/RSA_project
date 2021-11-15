@@ -23,3 +23,32 @@ def MillerRabin(p, repeat=5):
         else:
             return False
     return True
+
+def Generate_prime_number(keysize = 1024):
+    while True:
+        num = random.getrandbits(keysize)
+        if MillerRabin(num):
+            return num
+
+def CoprimeTest(num1, num2):
+    while num1 != 0 and num2 != 0:
+        if num1 > num2:
+            num1 %= num2
+        else:
+            num2 %= num1
+    if num1 + num2 == 1:
+        return True
+    else:
+        return False
+
+def Euler(num1, num2):
+    phi = (num1 - 1)*(num2 - 1)
+    return phi
+
+def GeneratingD(phi):
+    e_list = [3, 5, 17, 257, 65537]
+    e = random.choice(e_list)
+    while not CoprimeTest(e, phi):
+        e = random.choice(e_list)
+    D = pow(e, -1, phi)
+    return D
