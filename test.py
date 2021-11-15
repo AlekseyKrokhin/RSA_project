@@ -11,7 +11,7 @@ from main import Generate_prime_number
 
 class UnitTest(unittest.TestCase):
 
-    def test_encr(self):
+    def test_encrypt(self):
         main.n, main.e, main.D, main.p, main.q = keygen()
         self.assertEqual(Decrypt(Encrypt('Привет')), 'Привет')
         self.assertEqual(Decrypt(Encrypt('Russia is great country')), 'Russia is great countr')

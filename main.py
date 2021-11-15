@@ -57,7 +57,7 @@ def keygen():
     n = p * q
     phi = Euler(p, q)
     D, e = GenerateD_e(phi)
-    print( "n = " + str(n) + "\n" +
+    print("n = " + str(n) + "\n" +
           "E = " + str(e) + "\n" +
           "D = " + str(D) + "\n" +
           "p = " + str(p) + "\n" +
