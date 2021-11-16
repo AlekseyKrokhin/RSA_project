@@ -24,6 +24,7 @@ def MillerRabin(p, repeat= 5):
             return False
     return True
 
+
 def Generate_prime_number(keysize = 1024):
     while True:
         num = random.getrandbits(keysize)
@@ -57,11 +58,13 @@ def keygen():
     n = p * q
     phi = Euler(p, q)
     D, e = GenerateD_e(phi)
-    print("n = " + str(n) + "\n" +
-          "E = " + str(e) + "\n" +
-          "D = " + str(D) + "\n" +
-          "p = " + str(p) + "\n" +
-          "q = " + str(q) + "\n")
+    '''print('Открытый ключ (e, n): e = ', e, '\n'
+          'n = ', n, '\n'
+          'Закрытый ключ (d, n): e = ', e, '\n'
+          'D = ', D, '\n'
+          'p = ', p, '\n'
+          'q = ', q, '\n'
+          )'''
     return n, e, D, p, q
 
 def sec_to_dec(num: str):
@@ -76,7 +79,7 @@ def Encrypt(message):
     emessage = ""
     for i in message:
         i = ord(i)
-        i = '{0:016b}'.format(i)
+        i = '{0:011b}'.format(i)
         emessage += i
     emessage = "1" + emessage
     print(emessage)
@@ -94,7 +97,7 @@ def Decrypt(emessage):
     for i in emessage:
         count += 1
         num += i
-        if count == 16:
+        if count == 11:
             dmessage += chr((sec_to_dec(num)))
             count = 0
             num = ''
