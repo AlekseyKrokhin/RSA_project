@@ -24,7 +24,6 @@ def MillerRabin(p, repeat= 5):
             return False
     return True
 
-
 def Generate_prime_number(keysize = 1024):
     while True:
         num = random.getrandbits(keysize)
@@ -58,13 +57,13 @@ def keygen():
     n = p * q
     phi = Euler(p, q)
     D, e = GenerateD_e(phi)
-    '''print('Открытый ключ (e, n): e = ', e, '\n'
+    print('Открытый ключ (e, n): \n', 'e = ', e, '\n'
           'n = ', n, '\n'
           'Закрытый ключ (d, n): e = ', e, '\n'
           'D = ', D, '\n'
           'p = ', p, '\n'
           'q = ', q, '\n'
-          )'''
+          )
     return n, e, D, p, q
 
 def sec_to_dec(num: str):
@@ -82,10 +81,8 @@ def Encrypt(message):
         i = '{0:011b}'.format(i)
         emessage += i
     emessage = "1" + emessage
-    print(emessage)
     emessage = pow(int(emessage), e, n)
     return emessage
-
 
 def Decrypt(emessage):
     emessage = str(pow(int(emessage), D, n))
@@ -106,19 +103,41 @@ def Decrypt(emessage):
 if __name__ == '__main__':
     while True:
         order = int(input(
-            "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре), Дешифровать (2 на клавиатуре) или Сгенирировать ключи (3 на клавиатуре): \n"))
+            "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре), Расшифровать (2 на клавиатуре) или Сгенерировать ключи (3 на клавиатуре): \n"))
         if order == 1:
             message = str(input('Введите исходное сообщение М: '))
-            n, e, D, p, q = keygen()
+            order1 = int(input('Какие ключи использовать? \n Автоматически сгенерированные (1 на клавиатуре), собственные ключи (2 на клавиатуре), ключи из файла(3 на клавиатуре): \n'))
+            if order1 == 1:
+                n, e, D, p, q = keygen()
+            elif order1 == 2:
+                p = int(input('Введите два простых числа p и q:\n'
+                        'p = '))
+                while not MillerRabin(p, repeat = 5):
+                    p = int(input('Это не простое число. Введите другое: '))
+                q = int(input('q = '))
+                while not MillerRabin(p, repeat = 5):
+                    q = int(input('Это не простое число. Введите другое: '))
+                n = p*q
+                print('n = ', n, '\n phi = ', Euler(p, q))
+                e = int(input('Введите открытую экспоненту е (1 < e <= phi): e = '))
+                while e not in range(2, Euler(p,q)) and not CoprimeTest(e, Euler(p, q)):
+                    e = int(input('Такое число е не подходит. Введите другое: '))
             print('Шифртекст С: ', Encrypt(message))
             
         if order == 2:
             emessage = str(input('Введите шифртекст С: '))
-            D = int(input('Введите закрытый ключ(D, n): D = '))
+            D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
             n = int(input('n = '))
             dmessage = Decrypt(emessage)
             print('Исходное сообщение М: ', dmessage)
         if order == 3:
-            keygen()
             print("Получаю ключи...")
+            keygen()
+            '''print('Открытый ключ (e, n): e = ', e, '\n'
+                      'n = ', n, '\n'
+                      'Закрытый ключ (d, n): e = ', e, '\n'
+                      'D = ', D, '\n'
+                      'p = ', p, '\n'
+                      'q = ', q, '\n'
+                      )'''
 
