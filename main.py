@@ -2,6 +2,11 @@ import random
 
 
 def MillerRabin(p, repeat= 5):
+    """
+    :param p: prime number
+    :param repeat: number of rounds of simplicity check
+    :return: 'True' if the number is prime or 'False' if the number is not prime
+    """
     if p == 2:
         return True
     if p % 2 == 0:
@@ -25,12 +30,22 @@ def MillerRabin(p, repeat= 5):
     return True
 
 def Generate_prime_number(keysize = 1024):
+    """
+    :param keysize: bit length of a prime number
+    :return: random prime
+    """
     while True:
         num = random.getrandbits(keysize)
         if MillerRabin(num, repeat = 5):
             return num
 
 def CoprimeTest(num1, num2):
+    """
+
+    :param num1: number
+    :param num2: number
+    :return: simplicity test result
+    """
     while num1 != 0 and num2 != 0:
         if num1 > num2:
             num1 %= num2
@@ -42,10 +57,20 @@ def CoprimeTest(num1, num2):
         return False
 
 def Euler(num1, num2):
-    phi = (num1 - 1)*(num2 - 1)
-    return phi
+    """
+
+    :param num1: prime number
+    :param num2: prime number
+    :return: the value of the Euler function of the product of two primes
+    """
+    return (num1 - 1)*(num2 - 1)
 
 def GenerateD_e(phi):
+    """
+
+    :param phi: the value of the Euler function
+    :return: secret (D) and open(e) exponents
+    """
     e = random.randint(1000000000, 100000000000)
     while not CoprimeTest(phi, e):
         e = random.randint(1000000000, 100000000000)
@@ -53,6 +78,10 @@ def GenerateD_e(phi):
     return D, e
 
 def keygen():
+    """
+    selects a suitable public and private key by the entered prime numbers
+    :return:
+    """
     p, q = Generate_prime_number(), Generate_prime_number()
     n = p * q
     phi = Euler(p, q)
@@ -67,6 +96,11 @@ def keygen():
     return n, e, D, p, q
 
 def sec_to_dec(num: str):
+    """
+
+    :param num: binary number
+    :return: decimal representation of the entered number
+    """
     dec = 0
     j = 1
     for i in num:
