@@ -17,7 +17,7 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(Decrypt(Encrypt('Привет')), 'Привет')
         self.assertEqual(Decrypt(Encrypt('Russia is great country')), 'Russia is great country')
         self.assertEqual(Decrypt(Encrypt('2,71828182845904532..,./%')), '2,71828182845904532..,./%')
-        self.assertEqual(Decrypt(Encrypt('пи=3,1415==--')), 'пи=3,1415==--')
+        self.assertEqual(Decrypt(Encrypt('пи=3,1415==---')), 'пи=3,1415==---')
 
     def test_D(self):
         self.assertEqual(GenerateD(215, 56), 96)
