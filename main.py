@@ -66,7 +66,14 @@ def Euler(num1, num2):
     return (num1 - 1)*(num2 - 1)
 
 def GenerateE(phi):
-    e = random.randint(1000000000, 100000000000)
+    """
+    Selects a random number e in an range (1, phi+1) such that e is coprime with phi.
+    However, in order to save memory the range is reduced to (1, 100000000000).
+    :param phi: the value of the Euler function
+    :return: situable open (e) exponent.
+    """
+
+    e = random.randint(1, 100000000000)
     while not CoprimeTest(phi, e):
         e = random.randint(1000000000, 100000000000)
     return e
@@ -74,8 +81,10 @@ def GenerateE(phi):
 
 def GenerateD(phi, e):
     """
+    Selet secret (D) exponent such that it is multiplicatively inverse of e modulo phi (n)
     :param phi: the value of the Euler function
-    :return: secret (D) and open(e) exponents
+    :param e: open exponent
+    :return: secret (D) exponent
     """
     return pow(e, -1, phi)
 
@@ -100,7 +109,7 @@ def keygen():
 
 def sec_to_dec(num: str):
     """
-
+    convert binary numbers to integer decimal
     :param num: binary number
     :return: decimal representation of the entered number
     """
@@ -110,7 +119,13 @@ def sec_to_dec(num: str):
         dec += int(i) * pow(2, len(num)-j)
         j += 1
     return dec
+
 def Encode(message):
+    """
+    convert the original message into a bit sequence representing the message's symbols as binary numbers 16 bits long
+    :param message: original message
+    :return: message representing in the bit sequence
+    """
     emessage = ""
     for i in message:
         i = ord(i)
@@ -120,10 +135,20 @@ def Encode(message):
     return emessage
 
 def Encrypt(message):
+    """
+
+    :param message: original message
+    :return: encrypted bit sequence
+    """
     bitmessage = Encode(message)
     return pow(int(bitmessage), e, n)
 
 def Decode(bitmessage):
+    """
+
+    :param bitmessage: bit sequence of message
+    :return: decode message
+    """
     bitmessage = bitmessage[1:]
     count = 0
     dmessage = ''
@@ -138,16 +163,32 @@ def Decode(bitmessage):
     return dmessage
 
 def Decrypt(emessage):
+    """
+    Gets the bit sequence of the encrypted message ang by calling 'Decode' function gets the decrypted message
+    :param emessage: encrypted message
+    :return: decrypt message
+    """
     bitmessage = str(pow(int(emessage), D, n))
     dmessage = Decode(bitmessage)
     return dmessage
 
 def creat_electronic_signature(message):
+    """
+
+    :param message: transmitted message
+    :return: digital signature
+    """
     signature = Encode(message)
     signature = pow(int(signature), D, n)
     return signature
 
 def verif_electronic_signature(signature, message):
+    """
+
+    :param signature: digital signature
+    :param message: transmitted message
+    :return: result of authenticity's of signature checking
+    """
     signature = str(pow(int(signature), e, n))
     message_ = Decode(signature)
     if message_ == message:
@@ -161,7 +202,7 @@ if __name__ == '__main__':
             "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре),\nРасшифровать (2 на клавиатуре),\nСгенерировать ключи (3 на клавиатуре),\nИспользовать электронную подпись (4 на клавиатуре): \n"))
         if order == 1:
             message = str(input('Введите исходное сообщение М: '))
-            order1 = int(input('Какие ключи использовать? \n Автоматически сгенерированные (1 на клавиатуре), собственные ключи (2 на клавиатуре), ключи из файла(3 на клавиатуре): \n'))
+            order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nCобственные ключи (2 на клавиатуре),\nКлючи из файла (3 на клавиатуре): \n'))
             if order1 == 1:
                 n, e, D, p, q = keygen()
             elif order1 == 2:
@@ -173,7 +214,7 @@ if __name__ == '__main__':
                 while not MillerRabin(p, repeat = 5):
                     q = int(input('Это не простое число. Введите другое: '))
                 n = p*q
-                print('n = ', n, '\n phi = ', Euler(p, q))
+                print('n = ', n, '\nphi = ', Euler(p, q))
                 e = int(input('Введите открытую экспоненту е (1 < e <= phi): e = '))
                 while e not in range(2, Euler(p,q)) and not CoprimeTest(e, Euler(p, q)):
                     e = int(input('Такое число е не подходит. Введите другое: '))
@@ -195,6 +236,12 @@ if __name__ == '__main__':
                 message = str(input('Введите сообщение М: '))
                 n, e, D, p, q = keygen()
                 print('Ваша электронная подпись S: ', creat_electronic_signature(message))
+            if order2 == 2:
+                message = str(input('Введите сообщение М: '))
+                signature = str(input('Введите подпись S: '))
+                e = int(input('Введите открытый ключ (e, n):\ne = '))
+                n = int(input('n = '))
+                print(verif_electronic_signature(signature, message))
 
 
 
