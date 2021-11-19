@@ -79,7 +79,6 @@ def GenerateD(phi, e):
     """
     return pow(e, -1, phi)
 
-print(GenerateD(1111, 16))
 
 def keygen():
     """
@@ -111,59 +110,50 @@ def sec_to_dec(num: str):
         dec += int(i) * pow(2, len(num)-j)
         j += 1
     return dec
-
-def Encrypt(message):
+def Encode(message):
     emessage = ""
     for i in message:
         i = ord(i)
-        i = '{0:013b}'.format(i)
+        i = '{0:016b}'.format(i)
         emessage += i
     emessage = "1" + emessage
-    emessage = pow(int(emessage), e, n)
-
     return emessage
 
-def Decrypt(emessage):
-    emessage = str(pow(int(emessage), D, n))
-    emessage = emessage[1:]
+def Encrypt(message):
+    bitmessage = Encode(message)
+    return pow(int(bitmessage), e, n)
+
+def Decode(bitmessage):
+    bitmessage = bitmessage[1:]
     count = 0
     dmessage = ''
     num = ''
-    for i in emessage:
+    for i in bitmessage:
         count += 1
         num += i
-        if count == 13:
+        if count == 16:
             dmessage += chr((sec_to_dec(num)))
             count = 0
             num = ''
+    return dmessage
 
+def Decrypt(emessage):
+    bitmessage = str(pow(int(emessage), D, n))
+    dmessage = Decode(bitmessage)
     return dmessage
 
 def creat_electronic_signature(message):
-    signature = ""
-    for i in message:
-        i = ord(i)
-        i = '{0:013b}'.format(i)
-        signature += i
-    signature = "1" + signature
+    signature = Encode(message)
     signature = pow(int(signature), D, n)
     return signature
 
 def verif_electronic_signature(signature, message):
-    signature = str(pow(int(signature), D, n))
-    signature = signature[1:]
-    count = 0
-    message_ = ''
-    num = ''
-    for i in signature:
-        count += 1
-        num += i
-        if count == 13:
-            message_ += chr((sec_to_dec(num)))
-            count = 0
-            num = ''
+    signature = str(pow(int(signature), e, n))
+    message_ = Decode(signature)
     if message_ == message:
         return "Verification successful!"
+    else:
+        return "Signature is not valid"
 
 if __name__ == '__main__':
     while True:
