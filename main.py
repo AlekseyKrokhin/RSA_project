@@ -69,6 +69,7 @@ def GenerateE(phi):
     """
     Selects a random number e in an range (1, phi+1) such that e is coprime with phi.
     However, in order to save memory the range is reduced to (1, 100000000000).
+
     :param phi: the value of the Euler function
     :return: situable open (e) exponent.
     """
@@ -82,6 +83,7 @@ def GenerateE(phi):
 def GenerateD(phi, e):
     """
     Selet secret (D) exponent such that it is multiplicatively inverse of e modulo phi (n)
+
     :param phi: the value of the Euler function
     :param e: open exponent
     :return: secret (D) exponent
@@ -92,7 +94,6 @@ def GenerateD(phi, e):
 def keygen():
     """
     selects a suitable public and private key by the entered prime numbers
-    :return:
     """
     p, q = Generate_prime_number(), Generate_prime_number()
     n = p * q
@@ -123,6 +124,7 @@ def sec_to_dec(num: str):
 def Encode(message):
     """
     convert the original message into a bit sequence representing the message's symbols as binary numbers 16 bits long
+
     :param message: original message
     :return: message representing in the bit sequence
     """
@@ -165,6 +167,7 @@ def Decode(bitmessage):
 def Decrypt(emessage):
     """
     Gets the bit sequence of the encrypted message ang by calling 'Decode' function gets the decrypted message
+
     :param emessage: encrypted message
     :return: decrypt message
     """
@@ -196,6 +199,32 @@ def verif_electronic_signature(signature, message):
     else:
         return "Signature is not valid"
 
+def ReadingPrivate():
+    filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+    with open(filename + ".txt", "r") as file_key:
+        n = int(file_key.readline().strip()[4:])
+        D = int(file_key.readline().strip()[4:])
+    return n, D
+
+def RecordingPrivate(n, D):
+    filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+    with open(filename + ".txt", "w") as file:
+        file.write("n = " + str(n) + "\n"
+                "D = " + str(D) + "\n")
+
+def RecordingPublic(n, e):
+    filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
+    with open(filename + ".txt", "w") as file:
+        file.write("n = " + str(n) + "\n"
+                "e = " + str(e) + "\n")
+
+def ReadingPublic():
+    filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
+    with open(filename + ".txt", "r") as f:
+        n = int(f.readline().strip()[4:])
+        e = int(f.readline().strip()[4:])
+    return n, e
+
 if __name__ == '__main__':
     while True:
         order = int(input(
@@ -205,7 +234,7 @@ if __name__ == '__main__':
             order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nCобственные ключи (2 на клавиатуре),\nКлючи из файла (3 на клавиатуре): \n'))
             if order1 == 1:
                 n, e, D, p, q = keygen()
-            elif order1 == 2:
+            if order1 == 2:
                 p = int(input('Введите два простых числа p и q:\n'
                         'p = '))
                 while not MillerRabin(p, repeat = 5):
@@ -218,17 +247,30 @@ if __name__ == '__main__':
                 e = int(input('Введите открытую экспоненту е (1 < e <= phi): e = '))
                 while e not in range(2, Euler(p,q)) and not CoprimeTest(e, Euler(p, q)):
                     e = int(input('Такое число е не подходит. Введите другое: '))
+            if order1 == 3:
+                n, e = ReadingPublic()
+            else:
+                continue
             print('Шифртекст С: ', Encrypt(message))
             
         if order == 2:
             emessage = str(input('Введите шифртекст С: '))
-            D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
-            n = int(input('n = '))
-            dmessage = Decrypt(emessage)
-            print('Исходное сообщение М: ', dmessage)
+            order1 = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
+            if order1 == 1:
+                D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
+                n = int(input('n = '))
+            if order1 == 2:
+                n, D = ReadingPrivate()
+            print('Исходное сообщение М: ', Decrypt(emessage))
         if order == 3:
             print("Получаю ключи...")
-            keygen()
+            n, e, D, p, q = keygen()
+            order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
+            if order1 == 1:
+                RecordingPublic(n, e)
+                RecordingPrivate(n, D)
+            else:
+                continue
 
         if order == 4:
             order2 = int(input("Создать подпись (1 на клавитауре) или Проверить подпись (2 на клавиатуре)? \n"))
@@ -242,6 +284,10 @@ if __name__ == '__main__':
                 e = int(input('Введите открытый ключ (e, n):\ne = '))
                 n = int(input('n = '))
                 print(verif_electronic_signature(signature, message))
+            else:
+                continue
+        else:
+            continue
 
 
 
