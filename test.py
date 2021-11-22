@@ -7,9 +7,9 @@ from main import Encrypt
 from main import Decrypt
 from main import keygen
 from main import MillerRabin
-from main import creat_electronic_signature
-from main import verif_electronic_signature
-
+from main import Creat_electronic_signature
+from main import Verif_electronic_signature
+from main import Sec_to_dec
 
 
 class UnitTest(unittest.TestCase):
@@ -42,11 +42,19 @@ class UnitTest(unittest.TestCase):
 
     def test_signature(self):
         main.n, main.e, main.D, main.p, main.q = keygen()
-        self.assertEqual(verif_electronic_signature(creat_electronic_signature('ArgentinaJamaika5:0'),'ArgentinaJamaika5:0'), "Verification successful!")
-        self.assertEqual(verif_electronic_signature(creat_electronic_signature('251w61dsdnkbdbsd'), '12345'),'Signature is not valid')
-        self.assertEqual(verif_electronic_signature(creat_electronic_signature('異體字'), '異體字'),"Verification successful!")
-        self.assertEqual(verif_electronic_signature(creat_electronic_signature('لَمَّا زرتُ الصين'), 'لَمَّا زرتُ الصين'),'Verification successful!')
+        self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('ArgentinaJamaika5:0'),'ArgentinaJamaika5:0'), "Verification successful!")
+        self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('251w61dsdnkbdbsd'), '12345'),'Signature is not valid')
+        self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('異體字'), '異體字'),"Verification successful!")
+        self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('لَمَّا زرتُ الصين'), 'لَمَّا زرتُ الصين'),'Verification successful!')
 
 
+    def test_Euler(self):
+        self.assertEqual(Euler(1001, 250), 249000)
+        self.assertEqual(Euler(1111, 7789), 8644680)
 
+    def test_sectodec(self):
+        self.assertEqual(Sec_to_dec('101'), 5)
+        self.assertEqual(Sec_to_dec('11101011'), 235)
+        self.assertEqual(Sec_to_dec('111111'), 63)
+        self.assertEqual(Sec_to_dec('1011'), 11)
 
