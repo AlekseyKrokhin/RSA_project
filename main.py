@@ -76,7 +76,7 @@ def GenerateE(phi):
 
     e = random.randint(1, 100000000000)
     while not CoprimeTest(phi, e):
-        e = random.randint(1000000000, 100000000000)
+        e = random.randint(1, 100000000000)
     return e
 
 
@@ -100,15 +100,9 @@ def keygen():
     phi = Euler(p, q)
     e = GenerateE(phi)
     D = GenerateD(phi, e)
-    print('Открытый ключ (e, n): \ne = ', e, '\n'
-          'n = ', n, '\n'
-          'Закрытый ключ (d, n): \n'
-          'D = ', D, '\n'
-          'n = ', n, '\n'
-          )
     return n, e, D, p, q
 
-def sec_to_dec(num: str):
+def Sec_to_dec(num: str):
     """
     convert binary numbers to integer decimal
     :param num: binary number
@@ -159,7 +153,7 @@ def Decode(bitmessage):
         count += 1
         num += i
         if count == 16:
-            dmessage += chr((sec_to_dec(num)))
+            dmessage += chr((Sec_to_dec(num)))
             count = 0
             num = ''
     return dmessage
@@ -175,7 +169,7 @@ def Decrypt(emessage):
     dmessage = Decode(bitmessage)
     return dmessage
 
-def creat_electronic_signature(message):
+def Creat_electronic_signature(message):
     """
 
     :param message: transmitted message
@@ -185,7 +179,7 @@ def creat_electronic_signature(message):
     signature = pow(int(signature), D, n)
     return signature
 
-def verif_electronic_signature(signature, message):
+def Verif_electronic_signature(signature, message):
     """
 
     :param signature: digital signature
@@ -200,29 +194,41 @@ def verif_electronic_signature(signature, message):
         return "Signature is not valid"
 
 def ReadingPrivate():
+    """
+    reads private keys from a file
+    """
     filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
-    with open(filename + ".txt", "r") as file_key:
-        n = int(file_key.readline().strip()[4:])
-        D = int(file_key.readline().strip()[4:])
+    with open(filename + ".txt", "r") as file:
+        n = int(file.readline().strip()[4:])
+        D = int(file.readline().strip()[4:])
     return n, D
 
 def RecordingPrivate(n, D):
+    """
+    Saves private keys to a file
+    """
     filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
     with open(filename + ".txt", "w") as file:
         file.write("n = " + str(n) + "\n"
                 "D = " + str(D) + "\n")
 
 def RecordingPublic(n, e):
+    """
+    Saves public keys to a file
+    """
     filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
     with open(filename + ".txt", "w") as file:
         file.write("n = " + str(n) + "\n"
                 "e = " + str(e) + "\n")
 
 def ReadingPublic():
+    """
+    reads public keys from a file
+    """
     filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
-    with open(filename + ".txt", "r") as f:
-        n = int(f.readline().strip()[4:])
-        e = int(f.readline().strip()[4:])
+    with open(filename + ".txt", "r") as file:
+        n = int(file.readline().strip()[4:])
+        e = int(file.readline().strip()[4:])
     return n, e
 
 if __name__ == '__main__':
@@ -234,6 +240,19 @@ if __name__ == '__main__':
             order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nCобственные ключи (2 на клавиатуре),\nКлючи из файла (3 на клавиатуре): \n'))
             if order1 == 1:
                 n, e, D, p, q = keygen()
+                print('Открытый ключ (e, n): \ne = ', e, '\n'
+                                    'n = ', n, '\n'
+                                    'Закрытый ключ (d, n): \n'
+                                    'D = ', D, '\n'
+                                    'n = ', n, '\n'
+                      )
+                order2 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
+                if order2 == 1:
+                    RecordingPublic(n, e)
+                    RecordingPrivate(n, D)
+                else:
+                    continue
+                print('Шифртекст С: ', Encrypt(message))
             if order1 == 2:
                 p = int(input('Введите два простых числа p и q:\n'
                         'p = '))
@@ -273,17 +292,38 @@ if __name__ == '__main__':
                 continue
 
         if order == 4:
-            order2 = int(input("Создать подпись (1 на клавитауре) или Проверить подпись (2 на клавиатуре)? \n"))
+            order2 = int(input("Создать подпись (1 на клавитауре)\nПроверить подпись (2 на клавиатуре)? \n"))
             if order2 == 1:
                 message = str(input('Введите сообщение М: '))
-                n, e, D, p, q = keygen()
-                print('Ваша электронная подпись S: ', creat_electronic_signature(message))
+                order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
+                if order1 == 1:
+                    n, e, D, p, q = keygen()
+                    print('Открытый ключ (e, n): \ne = ', e, '\n'
+                                                    'n = ', n, '\n'
+                                                    'Закрытый ключ (d, n): \n'
+                                                    'D = ', D, '\n'
+                                                    'n = ', n, '\n')
+                    print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
+                    order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
+                    if order1 == 1:
+                        RecordingPublic(n, e)
+                        RecordingPrivate(n, D)
+                    else:
+                        continue
+                if order1 == 2:
+                    n, e = ReadingPublic()
+                    print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
+
             if order2 == 2:
                 message = str(input('Введите сообщение М: '))
                 signature = str(input('Введите подпись S: '))
-                e = int(input('Введите открытый ключ (e, n):\ne = '))
-                n = int(input('n = '))
-                print(verif_electronic_signature(signature, message))
+                order_key = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
+                if order_key == 1:
+                    e = int(input('Введите открытый ключ (e, n):\ne = '))
+                    n = int(input('n = '))
+                if order_key == 2:
+                    n, e = ReadingPublic()
+                print(Verif_electronic_signature(signature, message))
             else:
                 continue
         else:
