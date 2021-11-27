@@ -237,38 +237,12 @@ if __name__ == '__main__':
             "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре),\nРасшифровать (2 на клавиатуре),\nСгенерировать ключи (3 на клавиатуре),\nИспользовать электронную подпись (4 на клавиатуре): \n"))
         if order == 1:
             message = str(input('Введите исходное сообщение М: '))
-            order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nCобственные ключи (2 на клавиатуре),\nКлючи из файла (3 на клавиатуре): \n'))
-            if order1 == 1:
-                n, e, D, p, q = keygen()
-                print('Открытый ключ (e, n): \ne = ', e, '\n'
-                                    'n = ', n, '\n'
-                                    'Закрытый ключ (d, n): \n'
-                                    'D = ', D, '\n'
-                                    'n = ', n, '\n'
-                      )
-                print('Шифртекст С: ', Encrypt(message))
-                order2 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
-                if order2 == 1:
-                    RecordingPublic(n, e)
-                    RecordingPrivate(n, D)
-                else:
-                    continue
+            order1 = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
 
+            if order1 == 1:
+                D = int(input('Введите открытый ключ(e, n):\n' 'e = '))
+                n = int(input('n = '))
             if order1 == 2:
-                p = int(input('Введите два простых числа p и q:\n'
-                        'p = '))
-                while not MillerRabin(p, repeat = 5):
-                    p = int(input('Это не простое число. Введите другое: '))
-                q = int(input('q = '))
-                while not MillerRabin(p, repeat = 5):
-                    q = int(input('Это не простое число. Введите другое: '))
-                n = p*q
-                print('n = ', n, '\nphi = ', Euler(p, q))
-                e = int(input('Введите открытую экспоненту е (1 < e <= phi): e = '))
-                while e not in range(2, Euler(p,q)) and not CoprimeTest(e, Euler(p, q)):
-                    e = int(input('Такое число е не подходит. Введите другое: '))
-                print('Шифртекст С: ', Encrypt(message))
-            if order1 == 3:
                 n, e = ReadingPublic()
                 print('Шифртекст С: ', Encrypt(message))
             else:
@@ -303,21 +277,10 @@ if __name__ == '__main__':
             order2 = int(input("Создать подпись (1 на клавитауре)\nПроверить подпись (2 на клавиатуре)? \n"))
             if order2 == 1:
                 message = str(input('Введите сообщение М: '))
-                order1 = int(input('Какие ключи использовать?\nАвтоматически сгенерированные (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
+                order1 = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
                 if order1 == 1:
-                    n, e, D, p, q = keygen()
-                    print('Открытый ключ (e, n): \ne = ', e, '\n'
-                                                    'n = ', n, '\n'
-                                                    'Закрытый ключ (d, n): \n'
-                                                    'D = ', D, '\n'
-                                                    'n = ', n, '\n')
-                    print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
-                    order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
-                    if order1 == 1:
-                        RecordingPublic(n, e)
-                        RecordingPrivate(n, D)
-                    else:
-                        continue
+                    D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
+                    n = int(input('n = '))
                 if order1 == 2:
                     n, D = ReadingPrivate()
                     print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
