@@ -246,13 +246,14 @@ if __name__ == '__main__':
                                     'D = ', D, '\n'
                                     'n = ', n, '\n'
                       )
+                print('Шифртекст С: ', Encrypt(message))
                 order2 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
                 if order2 == 1:
                     RecordingPublic(n, e)
                     RecordingPrivate(n, D)
                 else:
                     continue
-                print('Шифртекст С: ', Encrypt(message))
+
             if order1 == 2:
                 p = int(input('Введите два простых числа p и q:\n'
                         'p = '))
@@ -266,11 +267,12 @@ if __name__ == '__main__':
                 e = int(input('Введите открытую экспоненту е (1 < e <= phi): e = '))
                 while e not in range(2, Euler(p,q)) and not CoprimeTest(e, Euler(p, q)):
                     e = int(input('Такое число е не подходит. Введите другое: '))
+                print('Шифртекст С: ', Encrypt(message))
             if order1 == 3:
                 n, e = ReadingPublic()
+                print('Шифртекст С: ', Encrypt(message))
             else:
                 continue
-            print('Шифртекст С: ', Encrypt(message))
             
         if order == 2:
             emessage = str(input('Введите шифртекст С: '))
@@ -284,6 +286,12 @@ if __name__ == '__main__':
         if order == 3:
             print("Получаю ключи...")
             n, e, D, p, q = keygen()
+            print('Открытый ключ (e, n): \ne = ', e, '\n'
+                                        'n = ', n, '\n'
+                                        'Закрытый ключ (d, n): \n'
+                                        'D = ', D, '\n'
+                                        'n = ', n, '\n'
+                  )
             order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
             if order1 == 1:
                 RecordingPublic(n, e)
@@ -311,7 +319,7 @@ if __name__ == '__main__':
                     else:
                         continue
                 if order1 == 2:
-                    n, e = ReadingPublic()
+                    n, D = ReadingPrivate()
                     print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
 
             if order2 == 2:
