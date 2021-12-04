@@ -9,7 +9,6 @@ from main import keygen
 from main import MillerRabin
 from main import Creat_electronic_signature
 from main import Verif_electronic_signature
-from main import Sec_to_dec
 
 
 class UnitTest(unittest.TestCase):
@@ -52,9 +51,4 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(Euler(1001, 250), 249000)
         self.assertEqual(Euler(1111, 7789), 8644680)
 
-    def test_sectodec(self):
-        self.assertEqual(Sec_to_dec('101'), 5)
-        self.assertEqual(Sec_to_dec('11101011'), 235)
-        self.assertEqual(Sec_to_dec('111111'), 63)
-        self.assertEqual(Sec_to_dec('1011'), 11)
 

@@ -102,19 +102,6 @@ def keygen():
     D = GenerateD(phi, e)
     return n, e, D, p, q
 
-def Sec_to_dec(num: str):
-    """
-    convert binary numbers to integer decimal
-    :param num: binary number
-    :return: decimal representation of the entered number
-    """
-    dec = 0
-    j = 1
-    for i in num:
-        dec += int(i) * pow(2, len(num)-j)
-        j += 1
-    return dec
-
 def Encode(message):
     """
     convert the original message into a bit sequence representing the message's symbols as binary numbers 16 bits long
@@ -153,7 +140,8 @@ def Decode(bitmessage):
         count += 1
         num += i
         if count == 16:
-            dmessage += chr((Sec_to_dec(num)))
+            #dmessage += chr((Sec_to_dec(num)))
+            dmessage += chr(int(num, 2))
             count = 0
             num = ''
     return dmessage
