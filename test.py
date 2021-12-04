@@ -10,11 +10,11 @@ from main import MillerRabin
 from main import Creat_electronic_signature
 from main import Verif_electronic_signature
 
-
 class UnitTest(unittest.TestCase):
 
+    main.n, main.e, main.D = keygen()
+
     def test_encrypt(self):
-        main.n, main.e, main.D, main.p, main.q = keygen()
         self.assertEqual(Decrypt(Encrypt('Привет')), 'Привет')
         self.assertEqual(Decrypt(Encrypt('Russia is great country')), 'Russia is great country')
         self.assertEqual(Decrypt(Encrypt('2,71828182845904532..,./%')), '2,71828182845904532..,./%')
@@ -40,7 +40,6 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(CoprimeTest(36276516732, 114550), False)
 
     def test_signature(self):
-        main.n, main.e, main.D, main.p, main.q = keygen()
         self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('ArgentinaJamaika5:0'),'ArgentinaJamaika5:0'), "Verification successful!")
         self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('251w61dsdnkbdbsd'), '12345'),'Signature is not valid')
         self.assertEqual(Verif_electronic_signature(Creat_electronic_signature('異體字'), '異體字'),"Verification successful!")

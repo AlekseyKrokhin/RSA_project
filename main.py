@@ -1,8 +1,11 @@
 import random
 
-
-def MillerRabin(p, repeat= 5):
+def MillerRabin(p, repeat = 5):
     """
+
+    Probability test for simplicity
+    https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D1%81%D1%82_%D0%9C%D0%B8%D0%BB%D0%BB%D0%B5%D1%80%D0%B0_%E2%80%94_%D0%A0%D0%B0%D0%B1%D0%B8%D0%BD%D0%B0
+
     :param p: prime number
     :param repeat: number of rounds of simplicity check
     :return: 'True' if the number is prime or 'False' if the number is not prime
@@ -31,6 +34,8 @@ def MillerRabin(p, repeat= 5):
 
 def Generate_prime_number(keysize = 1024):
     """
+    Return suitable prime number
+
     :param keysize: bit length of a prime number
     :return: random prime
     """
@@ -41,6 +46,7 @@ def Generate_prime_number(keysize = 1024):
 
 def CoprimeTest(num1, num2):
     """
+    Checks numbers for coprime
 
     :param num1: number
     :param num2: number
@@ -58,6 +64,8 @@ def CoprimeTest(num1, num2):
 
 def Euler(num1, num2):
     """
+    Euler's function multiplicative arithmetic function,
+    the value of which is equal to the number of natural numbers not exceeding n and coprime to it
 
     :param num1: prime number
     :param num2: prime number
@@ -93,18 +101,21 @@ def GenerateD(phi, e):
 
 def keygen():
     """
-    selects a suitable public and private key by the entered prime numbers
+    Selects a suitable public and private key by the entered prime numbers
     """
+
     p, q = Generate_prime_number(), Generate_prime_number()
     n = p * q
     phi = Euler(p, q)
     e = GenerateE(phi)
     D = GenerateD(phi, e)
-    return n, e, D, p, q
+
+    return n, e, D
+
 
 def Encode(message):
     """
-    convert the original message into a bit sequence representing the message's symbols as binary numbers 16 bits long
+    Convert the original message into a bit sequence representing the message's symbols as binary numbers 16 bits long
 
     :param message: original message
     :return: message representing in the bit sequence
@@ -120,6 +131,8 @@ def Encode(message):
 def Encrypt(message):
     """
 
+    Encrypts the input message
+
     :param message: original message
     :return: encrypted bit sequence
     """
@@ -128,6 +141,7 @@ def Encrypt(message):
 
 def Decode(bitmessage):
     """
+    Encodes the input message into a bit sequence
 
     :param bitmessage: bit sequence of message
     :return: decode message
@@ -140,7 +154,6 @@ def Decode(bitmessage):
         count += 1
         num += i
         if count == 16:
-            #dmessage += chr((Sec_to_dec(num)))
             dmessage += chr(int(num, 2))
             count = 0
             num = ''
@@ -159,6 +172,7 @@ def Decrypt(emessage):
 
 def Creat_electronic_signature(message):
     """
+    Returns the digital signature for an input message
 
     :param message: transmitted message
     :return: digital signature
@@ -169,6 +183,7 @@ def Creat_electronic_signature(message):
 
 def Verif_electronic_signature(signature, message):
     """
+    Verifies the authenticity of the entered signature
 
     :param signature: digital signature
     :param message: transmitted message
@@ -181,39 +196,36 @@ def Verif_electronic_signature(signature, message):
     else:
         return "Signature is not valid"
 
-def ReadingPrivate():
+def ReadingPrivate(filename):
     """
-    reads private keys from a file
+    Reads private keys from a file
     """
-    filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
     with open(filename + ".txt", "r") as file:
         n = int(file.readline()[4:])
         D = int(file.readline()[4:])
     return n, D
 
-def RecordingPrivate(n, D):
+def RecordingPrivate(n, D, filename):
     """
     Saves private keys to a file
     """
-    filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
     with open(filename + ".txt", "w") as file:
         file.write("n = " + str(n) + "\n"
                 "D = " + str(D) + "\n")
 
-def RecordingPublic(n, e):
+def RecordingPublic(n, e, filename):
     """
     Saves public keys to a file
     """
-    filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
     with open(filename + ".txt", "w") as file:
         file.write("n = " + str(n) + "\n"
                 "e = " + str(e) + "\n")
 
-def ReadingPublic():
+def ReadingPublic(filename):
     """
-    reads public keys from a file
+    Reads public keys from a file
     """
-    filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
+
     with open(filename + ".txt", "r") as file:
         n = int(file.readline()[4:])
         e = int(file.readline()[4:])
@@ -230,12 +242,14 @@ if __name__ == '__main__':
             if order1 == 1:
                 D = int(input('Введите открытый ключ(e, n):\n' 'e = '))
                 n = int(input('n = '))
+
             if order1 == 2:
-                n, e = ReadingPublic()
+                filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                n, e = ReadingPublic(filename)
                 print('Шифртекст С: ', Encrypt(message))
             else:
                 continue
-            
+
         if order == 2:
             emessage = str(input('Введите шифртекст С: '))
             order1 = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
@@ -243,21 +257,24 @@ if __name__ == '__main__':
                 D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
                 n = int(input('n = '))
             if order1 == 2:
-                n, D = ReadingPrivate()
+                filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                n, D = ReadingPrivate(filename)
             print('Исходное сообщение М: ', Decrypt(emessage))
         if order == 3:
             print("Получаю ключи...")
-            n, e, D, p, q = keygen()
+            n, e, D = keygen()
             print('Открытый ключ (e, n): \ne = ', e, '\n'
                                         'n = ', n, '\n'
-                                        'Закрытый ключ (d, n): \n'
+                                        'Закрытый ключ (D, n): \n'
                                         'D = ', D, '\n'
                                         'n = ', n, '\n'
                   )
             order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
             if order1 == 1:
-                RecordingPublic(n, e)
-                RecordingPrivate(n, D)
+                filename_op = str(input('Введите названия текстового файла для открытого ключа:\n'))
+                filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                RecordingPublic(n, e, filename)
+                RecordingPrivate(n, D, filename)
             else:
                 continue
 
@@ -270,7 +287,8 @@ if __name__ == '__main__':
                     D = int(input('Введите закрытый ключ(D, n):\n' 'D = '))
                     n = int(input('n = '))
                 if order1 == 2:
-                    n, D = ReadingPrivate()
+                    filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                    n, D = ReadingPrivate(filename)
                     print('Ваша электронная подпись S: ', Creat_electronic_signature(message))
 
             if order2 == 2:
@@ -281,7 +299,8 @@ if __name__ == '__main__':
                     e = int(input('Введите открытый ключ (e, n):\ne = '))
                     n = int(input('n = '))
                 if order_key == 2:
-                    n, e = ReadingPublic()
+                    filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
+                    n, e = ReadingPublic(filename)
                 print(Verif_electronic_signature(signature, message))
             else:
                 continue
