@@ -199,8 +199,8 @@ def ReadingPrivate():
     """
     filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
     with open(filename + ".txt", "r") as file:
-        n = int(file.readline().strip()[4:])
-        D = int(file.readline().strip()[4:])
+        n = int(file.readline()[4:])
+        D = int(file.readline()[4:])
     return n, D
 
 def RecordingPrivate(n, D):
@@ -227,8 +227,8 @@ def ReadingPublic():
     """
     filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
     with open(filename + ".txt", "r") as file:
-        n = int(file.readline().strip()[4:])
-        e = int(file.readline().strip()[4:])
+        n = int(file.readline()[4:])
+        e = int(file.readline()[4:])
     return n, e
 
 if __name__ == '__main__':
