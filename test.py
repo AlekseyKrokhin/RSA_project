@@ -51,3 +51,4 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(Euler(1111, 7789), 8644680)
 
 
+

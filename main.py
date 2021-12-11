@@ -1,4 +1,6 @@
-import random
+import random, sys
+
+RANGE_E = 100000000000
 
 def MillerRabin(p, repeat = 5):
     """
@@ -82,9 +84,9 @@ def GenerateE(phi):
     :return: situable open (e) exponent.
     """
 
-    e = random.randint(1, 100000000000)
+    e = random.randint(1, RANGE_E)
     while not CoprimeTest(phi, e):
-        e = random.randint(1, 100000000000)
+        e = random.randint(1, RANGE_E)
     return e
 
 
@@ -234,19 +236,21 @@ def ReadingPublic(filename):
 if __name__ == '__main__':
     while True:
         order = int(input(
-            "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре),\nРасшифровать (2 на клавиатуре),\nСгенерировать ключи (3 на клавиатуре),\nИспользовать электронную подпись (4 на клавиатуре): \n"))
+            "Что вы хотите сделать? \nЗашифровать сообщение (1 на клавиатуре),\nРасшифровать (2 на клавиатуре),\nСгенерировать ключи (3 на клавиатуре),\nИспользовать электронную подпись (4 на клавиатуре),\nЗакрыть (0 на клавиатуре): \n"))
         if order == 1:
             message = str(input('Введите исходное сообщение М: '))
             order1 = int(input('Какие ключи использовать?\nCобственные ключи (1 на клавиатуре),\nКлючи из файла (2 на клавиатуре): \n'))
 
             if order1 == 1:
-                D = int(input('Введите открытый ключ(e, n):\n' 'e = '))
+                e = int(input('Введите открытый ключ(e, n):\n' 'e = '))
                 n = int(input('n = '))
+                print('Шифртекст С: ', Encrypt(message))
 
             if order1 == 2:
-                filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
                 n, e = ReadingPublic(filename)
                 print('Шифртекст С: ', Encrypt(message))
+
             else:
                 continue
 
@@ -271,10 +275,10 @@ if __name__ == '__main__':
                   )
             order1 = int(input('Записать ключи в файл?\nДа (1 на клавиатуре)\nНет (2 на клавиатуре)\n'))
             if order1 == 1:
-                filename_op = str(input('Введите названия текстового файла для открытого ключа:\n'))
-                filename = str(input('Введите названия текстового файла для закрытого ключа:\n'))
-                RecordingPublic(n, e, filename)
-                RecordingPrivate(n, D, filename)
+                filename_o = str(input('Введите названия текстового файла для открытого ключа:\n'))
+                filename_p = str(input('Введите названия текстового файла для закрытого ключа:\n'))
+                RecordingPublic(n, e, filename_o)
+                RecordingPrivate(n, D, filename_p)
             else:
                 continue
 
@@ -302,10 +306,12 @@ if __name__ == '__main__':
                     filename = str(input('Введите названия текстового файла для открытого ключа:\n'))
                     n, e = ReadingPublic(filename)
                 print(Verif_electronic_signature(signature, message))
+
             else:
                 continue
-        else:
-            continue
+        if order == 0:
+            sys.exit()
+
 
 
 
