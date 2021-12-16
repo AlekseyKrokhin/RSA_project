@@ -3,12 +3,12 @@ import main
 from main import GenerateD
 from main import Euler
 from main import CoprimeTest
-from main import Encrypt
-from main import Decrypt
+from main import Encrypt, Decrypt
+from main import Encode, Decode
 from main import keygen
 from main import MillerRabin
-from main import Creat_electronic_signature
-from main import Verif_electronic_signature
+from main import Creat_electronic_signature, Verif_electronic_signature
+from main import ReadingPrivate, RecordingPrivate, RecordingPublic, ReadingPublic
 
 class UnitTest(unittest.TestCase):
 
@@ -24,6 +24,24 @@ class UnitTest(unittest.TestCase):
     def test_D(self):
         self.assertEqual(GenerateD(215, 56), 96)
         self.assertEqual(GenerateD(1111, 16), 625)
+
+    def test_code(self):
+        self.assertEqual(Decode(Encode('Qwerty')), 'Qwerty')
+        self.assertEqual(Decode(Encode('HSE_MIEM')), 'HSE_MIEM')
+        self.assertEqual(Decode(Encode('TESstss1234_++')), 'TESstss1234_++')
+
+    def test_file(self):
+        RecordingPrivate(100, 500, 'test_private1')
+        self.assertEqual(ReadingPrivate('test_private1'), (100, 500))
+
+        RecordingPrivate(37192871947984794179984, 2631782627848746183746378, 'test_private2')
+        self.assertEqual(ReadingPrivate('test_private2'), (37192871947984794179984, 2631782627848746183746378))
+
+        RecordingPublic(1002556256, 5005674333, 'test_public1')
+        self.assertEqual(ReadingPublic('test_public1'), (1002556256, 5005674333))
+
+        RecordingPublic(56789876545678909876543456789, 456789098765434567890987654, 'test_public2')
+        self.assertEqual(ReadingPublic('test_public2'), (56789876545678909876543456789, 456789098765434567890987654))
 
     def test_MilerRabin(self):
         self.assertEqual(MillerRabin(17, 5), True)
@@ -49,6 +67,8 @@ class UnitTest(unittest.TestCase):
     def test_Euler(self):
         self.assertEqual(Euler(1001, 250), 249000)
         self.assertEqual(Euler(1111, 7789), 8644680)
+        self.assertEqual(Euler(3529, 3571), 12594960)
+        self.assertEqual(Euler(1451, 1229), 1780600)
 
 
 
